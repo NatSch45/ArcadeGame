@@ -5,20 +5,26 @@ WIDTH, HEIGHT = 900, 500
 WIN = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Arcade Game")
 
-WHITE = (100, 20, 200)
+BG_COLOR = (100, 20, 200)
 
 FPS = 60
 VEL = 5
 BULLET_VEL = 7
 
-ME_HIT = pygame.USEREVENT + 1
-CURSED_GOAT_HIT = pygame.USEREVENT + 2
+Y_GRAVITY = 1
+JUMP_HEIGHT = 20
 
 ME = pygame.transform.scale(pygame.image.load(os.path.join('static', 'moiDetoure.png')), (100, 130))
 CURSED_GOAT = pygame.transform.scale(pygame.image.load(os.path.join('static', 'cursedGoat-removedBg.png')), (110, 125))
+RYU_STAND = pygame.transform.scale(pygame.image.load(os.path.join('static', 'RyuStand.png')), (80, 100))
+RYU_JUMP = pygame.transform.scale(pygame.image.load(os.path.join('static', 'RyuJump.png')), (80, 100))
+RYU_STOOP = pygame.transform.scale(pygame.image.load(os.path.join('static', 'RyuStoop.png')), (80, 100))
+
+ME_HIT = pygame.USEREVENT + 1
+CURSED_GOAT_HIT = pygame.USEREVENT + 2
 
 def drawWindow(me, cursedGoat, bulletsMe, bulletsCursedGoat):
-    WIN.fill(WHITE)
+    WIN.fill(BG_COLOR)
     WIN.blit(ME, (me.x, me.y))
     WIN.blit(CURSED_GOAT, (cursedGoat.x, cursedGoat.y))
 
@@ -64,7 +70,7 @@ def handleBullets(bulletsMe, bulletsCursedGoat, me, cursedGoat):
         if me.colliderect(bullet):
             pygame.event.post(pygame.event.Event(ME_HIT))
             bulletsCursedGoat.remove(bullet)
-        elif bullet.x < 0:
+        elif bullet.x < 0 - bullet.width:
             bulletsCursedGoat.remove(bullet)
     
 
@@ -73,6 +79,9 @@ def main():
     cursedGoat = pygame.Rect(500, 100, 110, 125)
     bulletsMe = []
     bulletsCursedGoat = []
+
+    jumping = False
+    Y_VELOCITY = JUMP_HEIGHT
 
     clock = pygame.time.Clock()
     run = True
@@ -91,6 +100,17 @@ def main():
                 if event.key == pygame.K_RCTRL and len(bulletsCursedGoat) < 3:
                     bullet = pygame.Rect(cursedGoat.x, cursedGoat.y + cursedGoat.height//2 - 2, 10, 5)
                     bulletsCursedGoat.append(bullet)
+
+                if event.key == pygame.K_SPACE:
+                    jumping = True
+        
+        if jumping:
+            me.y -= Y_VELOCITY
+            Y_VELOCITY -= Y_GRAVITY
+            if Y_VELOCITY < -JUMP_HEIGHT:
+                jumping = False
+                Y_VELOCITY = JUMP_HEIGHT
+
 
 
         handleBullets(bulletsMe, bulletsCursedGoat, me, cursedGoat)
