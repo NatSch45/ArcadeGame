@@ -1,4 +1,5 @@
 import RPi.GPIO as GPIO # Import Raspberry Pi GPIO library
+from time import sleep
 
 BUTTON_PIN = 38
 
@@ -10,3 +11,4 @@ run = True
 while run:
     if GPIO.input(BUTTON_PIN) == GPIO.HIGH:
         print("Button has been pushed !")
+        sleep(0.5)
