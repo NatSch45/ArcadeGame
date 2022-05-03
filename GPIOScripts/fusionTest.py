@@ -2,7 +2,6 @@ import pygame
 import os
 import RPi.GPIO as GPIO # Import Raspberry Pi GPIO library
 import datetime as DT
-from time import sleep
 
 BUTTON_PIN = 38
 
