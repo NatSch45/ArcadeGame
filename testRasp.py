@@ -1,12 +1,26 @@
 import pygame
 import os
+import RPi.GPIO as GPIO
+
+BUTTON_PIN = 33
+BUTTON_PIN_1 = 35
+BUTTON_PIN_2 = 37
+BUTTON_PIN_3 = 31
+
+GPIO.setwarnings(False) # Ignore warning for now
+GPIO.setmode(GPIO.BOARD) # Use physical pin numbering
+GPIO.setup(BUTTON_PIN, GPIO.IN, pull_up_down=GPIO.PUD_DOWN) # Set pin 10 to be an input pin and set initial value to be pulled low (off)
+GPIO.setup(BUTTON_PIN_1, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+GPIO.setup(BUTTON_PIN_2, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+GPIO.setup(BUTTON_PIN_3, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+
 
 WIDTH, HEIGHT = 900, 500
 WIN = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Arcade Game")
 
 FPS = 60
-VEL = 4
+VEL = 10
 BULLET_VEL = 7
 
 Y_GRAVITY = 1
@@ -31,17 +45,17 @@ def drawWindow(ryu):
     pygame.display.update()
 
 def ryuMovements(keys_pressed, ryu, jumping):
-    if keys_pressed[pygame.K_q] and ryu.x - VEL > 0: # LEFT
+    if GPIO.input(BUTTON_PIN_2) == GPIO.HIGH and ryu.x - VEL > 0: # LEFT
         if keys_pressed[pygame.K_s]:
             ryu.x -= 2
         else:
             ryu.x -= VEL - 1
-    if keys_pressed[pygame.K_d] and ryu.x + VEL + ryu.width < WIDTH: # RIGHT
+    if GPIO.input(BUTTON_PIN_1) == GPIO.HIGH and ryu.x + VEL + ryu.width < WIDTH: # RIGHT
         if keys_pressed[pygame.K_s]:
             ryu.x += 2
         else:
             ryu.x += VEL
-    if keys_pressed[pygame.K_s] and not jumping: # STOOP
+    if GPIO.input(BUTTON_PIN) == GPIO.HIGH and not jumping: # STOOP
         ryu.y = 280
         global ryuSurface
         ryuSurface = RYU_STOOP
@@ -67,10 +81,12 @@ def main():
             if event.type == pygame.QUIT:
                 run = False
             
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_z and not keys_pressed[pygame.K_s]:
-                    jumping = True
-        
+            #if event.type == pygame.KEYDOWN:
+                #if event.key == pygame.K_z and not keys_pressed[pygame.K_s]:
+                    #jumping = True
+        if GPIO.input(BUTTON_PIN_3) == GPIO.HIGH and not GPIO.input(BUTTON_PIN) == GPIO.HIGH:
+            jumping = True
+            
         if jumping:
             ryu.y -= Y_VELOCITY
             Y_VELOCITY -= Y_GRAVITY
