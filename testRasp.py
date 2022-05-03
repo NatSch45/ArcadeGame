@@ -1,7 +1,7 @@
 import pygame
 import os
-<<<<<<< HEAD:testRasp.py
 import RPi.GPIO as GPIO
+import datetime as DT
 
 BUTTON_PIN = 33
 BUTTON_PIN_1 = 35
@@ -15,23 +15,16 @@ GPIO.setup(BUTTON_PIN_1, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 GPIO.setup(BUTTON_PIN_2, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 GPIO.setup(BUTTON_PIN_3, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 
-=======
-import datetime as DT
->>>>>>> 8b9d0a60862dc9bf15a01eada7b6cf3141b6144f:test.py
+
 
 WIDTH, HEIGHT = 900, 500
 WIN = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Arcade Game")
 
 FPS = 60
-<<<<<<< HEAD:testRasp.py
-VEL = 10
-BULLET_VEL = 7
-=======
 VEL = 4
 HADOUKEN_VEL = 7
 MAX_HADOUKENS = 1
->>>>>>> 8b9d0a60862dc9bf15a01eada7b6cf3141b6144f:test.py
 
 Y_GRAVITY = 1
 JUMP_HEIGHT = 19
@@ -57,33 +50,21 @@ def drawWindow(ryu, hadoukens):
     pygame.display.update()
 
 def ryuMovements(keys_pressed, ryu, jumping):
-<<<<<<< HEAD:testRasp.py
-    if GPIO.input(BUTTON_PIN_2) == GPIO.HIGH and ryu.x - VEL > 0: # LEFT
-=======
     global ryuSurface
 
-    if keys_pressed[pygame.K_q] and ryu.x - VEL > 0 and ryuSurface != RYU_HADOUKEN: # LEFT
->>>>>>> 8b9d0a60862dc9bf15a01eada7b6cf3141b6144f:test.py
+    if GPIO.input(BUTTON_PIN_2) == GPIO.HIGH and ryu.x - VEL > 0 and ryuSurface != RYU_HADOUKEN: # LEFT
         if keys_pressed[pygame.K_s]:
             ryu.x -= 2
         else:
             ryu.x -= VEL - 1
-<<<<<<< HEAD:testRasp.py
-    if GPIO.input(BUTTON_PIN_1) == GPIO.HIGH and ryu.x + VEL + ryu.width < WIDTH: # RIGHT
-=======
 
-    if keys_pressed[pygame.K_d] and ryu.x + VEL + ryu.width < WIDTH and ryuSurface != RYU_HADOUKEN: # RIGHT
->>>>>>> 8b9d0a60862dc9bf15a01eada7b6cf3141b6144f:test.py
+    if GPIO.input(BUTTON_PIN_1) == GPIO.HIGH and ryu.x + VEL + ryu.width < WIDTH and ryuSurface != RYU_HADOUKEN: # RIGHT
         if keys_pressed[pygame.K_s]:
             ryu.x += 2
         else:
             ryu.x += VEL
-<<<<<<< HEAD:testRasp.py
-    if GPIO.input(BUTTON_PIN) == GPIO.HIGH and not jumping: # STOOP
-=======
 
-    if keys_pressed[pygame.K_s] and not jumping and ryuSurface != RYU_HADOUKEN: # STOOP
->>>>>>> 8b9d0a60862dc9bf15a01eada7b6cf3141b6144f:test.py
+    if GPIO.input(BUTTON_PIN) == GPIO.HIGH and not jumping and ryuSurface != RYU_HADOUKEN: # STOOP
         ryu.y = 280
         ryuSurface = RYU_STOOP
     elif ryuSurface == RYU_HADOUKEN:
@@ -119,18 +100,10 @@ def main():
             if event.type == pygame.QUIT:
                 run = False
             
-<<<<<<< HEAD:testRasp.py
             #if event.type == pygame.KEYDOWN:
                 #if event.key == pygame.K_z and not keys_pressed[pygame.K_s]:
                     #jumping = True
-        if GPIO.input(BUTTON_PIN_3) == GPIO.HIGH and not GPIO.input(BUTTON_PIN) == GPIO.HIGH:
-            jumping = True
             
-        if jumping:
-            ryu.y -= Y_VELOCITY
-            Y_VELOCITY -= Y_GRAVITY
-            if Y_VELOCITY < -JUMP_HEIGHT:
-=======
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_LCTRL and len(hadoukens) < MAX_HADOUKENS and not jumping:
                     hadouken = pygame.Rect(ryu.x + ryu.width, 245, 33*2, 33*2)
@@ -139,12 +112,14 @@ def main():
 
                 if event.key == pygame.K_z and not keys_pressed[pygame.K_s]:
                     jumping = True
-        
-        if jumping: # JUMP 
-            ryu.y -= yVelocity
-            yVelocity -= Y_GRAVITY
-            if yVelocity < -JUMP_HEIGHT:
->>>>>>> 8b9d0a60862dc9bf15a01eada7b6cf3141b6144f:test.py
+
+        if GPIO.input(BUTTON_PIN_3) == GPIO.HIGH and not GPIO.input(BUTTON_PIN) == GPIO.HIGH:
+            jumping = True
+            
+        if jumping:
+            ryu.y -= Y_VELOCITY
+            Y_VELOCITY -= Y_GRAVITY
+            if Y_VELOCITY < -JUMP_HEIGHT:
                 jumping = False
                 yVelocity = JUMP_HEIGHT
             ryuSurface = RYU_JUMP
