@@ -35,7 +35,7 @@ RYU_JUMP = pygame.transform.scale(pygame.image.load(os.path.join('static', 'RyuJ
 RYU_STOOP = pygame.transform.scale(pygame.image.load(os.path.join('static', 'RyuStoop.png')), (53*2, 71*2))
 RYU_STATIC_PUNCH = pygame.transform.scale(pygame.image.load(os.path.join('static', 'RyuStaticPunch.png')), (79*2, 97*2))
 RYU_HADOUKEN = pygame.transform.scale(pygame.image.load(os.path.join('static', 'RyuHdk.png')), (88*2, 92*2))
-HADOUKEN = pygame.transform.scale(pygame.image.load(os.path.join('static', 'hadouken.png')), (33*2, 33*2))
+HADOUKEN = pygame.transform.scale(pygame.image.load(os.path.join('static', 'Hadouken.png')), (33*2, 33*2))
 ryuSurface = RYU_JUMP
 
 RYU_HIT = pygame.USEREVENT + 1
@@ -110,8 +110,8 @@ def main():
                     hadoukens.append(hadouken)
                     lastHadouken = DT.datetime.now()
 
-                if event.key == pygame.K_z and not keys_pressed[pygame.K_s]:
-                    jumping = True
+                #if event.key == pygame.K_z and not keys_pressed[pygame.K_s]:
+                    #jumping = True
 
         if GPIO.input(BUTTON_PIN_3) == GPIO.HIGH and not GPIO.input(BUTTON_PIN) == GPIO.HIGH:
             jumping = True
