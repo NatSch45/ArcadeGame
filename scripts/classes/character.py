@@ -3,7 +3,7 @@ from scripts.surfaces import *
 from scripts.consts import *
 import datetime as DT
 
-class character:
+class Character:
     def __init__(self, defaultPosX, defaultPosY, standWidth, standHeight) -> None:
         self.drawing = None
         self.defaultXPos = defaultPosX
@@ -11,19 +11,7 @@ class character:
         self.standWidth = standWidth
         self.standHeight = standHeight
         self.surface = pygame.Rect(defaultPosX, defaultPosY, standWidth, standHeight)
-        self.name = None
         pass
-
-    def getStandDrawing(self):
-        return None
-    def getStoopDrawing(self):
-        return None
-    def getJumpDrawing(self):
-        return None
-    def getStaticPunchDrawing(self):
-        return None
-    def getHdkPosDrawing(self):
-        return None
 
     def movements(self, keys_pressed, jumping):
 
@@ -45,15 +33,23 @@ class character:
         elif self.drawing == self.getHdkPosDrawing():
             self.surface.y = 233
         elif self.drawing == self.getStaticPunchDrawing():
-            self.surface.x += 2
+            if self.surface.x + self.surface.width < WIDTH:
+                self.surface.x += 1
             self.surface.y = 225
+        elif self.drawing == self.getStaticKickDrawing():
+            if self.surface.x + self.surface.width < WIDTH:
+                self.surface.x += 1
+            self.surface.y = 240
         elif not jumping:
             self.surface.y = self.defaultYPos
+        
+        if not jumping:
+            self.surface.y = FLOOR - self.drawing.get_height()
             
         pass
         
     
-    def jumps(self, jumping, yVelocity, startHadouken, startPunch):
+    def jumps(self, jumping, yVelocity):
 
         if jumping: # JUMP
             self.surface.y -= yVelocity
@@ -62,11 +58,14 @@ class character:
                 jumping = False
                 yVelocity = JUMP_HEIGHT
             self.drawing = self.getJumpDrawing()
-        elif DT.datetime.now() < startHadouken + DT.timedelta(seconds=0.3):
+        elif DT.datetime.now() < self.startHadouken + DT.timedelta(seconds=0.3):
             self.drawing = self.getHdkPosDrawing()
-        elif DT.datetime.now() < startPunch + DT.timedelta(seconds=0.2):
+        elif DT.datetime.now() < self.startPunch + DT.timedelta(seconds=0.2):
             self.drawing = self.getStaticPunchDrawing()
+        elif DT.datetime.now() < self.startKick + DT.timedelta(seconds=0.2):
+            self.drawing = self.getStaticKickDrawing()
         else:
+            self.surface.y = self.defaultYPos
             self.drawing = self.getStandDrawing()
         
         

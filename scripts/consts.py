@@ -1,6 +1,7 @@
 import pygame
 
 WIDTH, HEIGHT = 900, 500
+FLOOR = 410
 WIN = pygame.display.set_mode((WIDTH, HEIGHT))
 
 FPS = 60
