@@ -1,32 +1,15 @@
 import pygame
 from pygame import mixer
-import os
 import datetime as DT
+from scripts.surfaces import *
+from scripts.consts import *
 
 mixer.init()
 
-WIDTH, HEIGHT = 900, 500
-WIN = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Arcade Game")
 
-FPS = 60
-VEL = 4
-HADOUKEN_VEL = 7
-MAX_HADOUKENS = 1
-
-Y_GRAVITY = 1
-JUMP_HEIGHT = 19
-
-BGSF = pygame.transform.scale(pygame.image.load(os.path.join('static/img', 'bgsfhd.jpg')), (WIDTH, HEIGHT))
-RYU_STAND = pygame.transform.scale(pygame.image.load(os.path.join('static/img', 'RyuStand.png')), (57*2, 105*2))
-RYU_JUMP = pygame.transform.scale(pygame.image.load(os.path.join('static/img', 'RyuJump.png')), (42*2, 69*2))
-RYU_STOOP = pygame.transform.scale(pygame.image.load(os.path.join('static/img', 'RyuStoop.png')), (53*2, 71*2))
-RYU_STATIC_PUNCH = pygame.transform.scale(pygame.image.load(os.path.join('static/img', 'RyuStaticPunch.png')), (79*2, 97*2))
-RYU_HADOUKEN = pygame.transform.scale(pygame.image.load(os.path.join('static/img', 'RyuHdk.png')), (88*2, 92*2))
-HADOUKEN = pygame.transform.scale(pygame.image.load(os.path.join('static/img', 'hadouken.png')), (33*2, 33*2))
 ryuSurface = RYU_JUMP
 
-RYU_HIT = pygame.USEREVENT + 1
 
 def drawWindow(ryu, hadoukens):
     WIN.blit(BGSF, (0, 0)) # Draw background image
@@ -63,8 +46,27 @@ def ryuMovements(keys_pressed, ryu, jumping):
     elif not jumping:
         ryu.y = 215
 
-def handleHadoukens(ryu, hadoukens):
+def handleJump(jumping, yVelocity, ryu, startHadouken, startPunch):
     global ryuSurface
+
+    if jumping: # JUMP 
+        ryu.y -= yVelocity
+        yVelocity -= Y_GRAVITY
+        if yVelocity < -JUMP_HEIGHT:
+            jumping = False
+            yVelocity = JUMP_HEIGHT
+        ryuSurface = RYU_JUMP
+    elif DT.datetime.now() < startHadouken + DT.timedelta(seconds=0.3):
+        ryuSurface = RYU_HADOUKEN
+    elif DT.datetime.now() < startPunch + DT.timedelta(seconds=0.2):
+        ryuSurface = RYU_STATIC_PUNCH
+    else:
+        ryuSurface = RYU_STAND
+    
+    
+    return (jumping, yVelocity)
+
+def handleHadoukens(hadoukens):
     for hadouken in hadoukens:
         hadouken.x += HADOUKEN_VEL
         if hadouken.x > WIDTH:
@@ -78,11 +80,11 @@ def main():
     startHadouken = DT.datetime.now() - DT.timedelta(seconds=0.5)
     startPunch = DT.datetime.now() - DT.timedelta(seconds=0.5)
 
-    jumping = False
-    yVelocity = JUMP_HEIGHT
-
     clock = pygame.time.Clock()
     run = True
+
+    jumping = False
+    yVelocity = JUMP_HEIGHT
 
     while run:
         clock.tick(FPS)
@@ -105,23 +107,11 @@ def main():
 
                 if event.key == pygame.K_z and not keys_pressed[pygame.K_s]:
                     jumping = True
-        
-        if jumping: # JUMP 
-            ryu.y -= yVelocity
-            yVelocity -= Y_GRAVITY
-            if yVelocity < -JUMP_HEIGHT:
-                jumping = False
-                yVelocity = JUMP_HEIGHT
-            ryuSurface = RYU_JUMP
-        elif DT.datetime.now() < startHadouken + DT.timedelta(seconds=0.3):
-            ryuSurface = RYU_HADOUKEN
-        elif DT.datetime.now() < startPunch + DT.timedelta(seconds=0.2):
-            ryuSurface = RYU_STATIC_PUNCH
-        else:
-            ryuSurface = RYU_STAND
+
+        jumping, yVelocity = handleJump(jumping, yVelocity, ryu, startHadouken, startPunch)
 
         ryuMovements(keys_pressed, ryu, jumping)
-        handleHadoukens(ryu, hadoukens)
+        handleHadoukens(hadoukens)
 
         drawWindow(ryu, hadoukens)
 

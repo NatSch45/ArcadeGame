@@ -1,0 +1,14 @@
+import pygame
+
+WIDTH, HEIGHT = 900, 500
+WIN = pygame.display.set_mode((WIDTH, HEIGHT))
+
+FPS = 60
+VEL = 4
+HADOUKEN_VEL = 7
+MAX_HADOUKENS = 1
+
+Y_GRAVITY = 1
+JUMP_HEIGHT = 19
+
+RYU_HIT = pygame.USEREVENT + 1
