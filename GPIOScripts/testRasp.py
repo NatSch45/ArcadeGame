@@ -29,13 +29,13 @@ MAX_HADOUKENS = 1
 Y_GRAVITY = 1
 JUMP_HEIGHT = 19
 
-BGSF = pygame.transform.scale(pygame.image.load(os.path.join('static', 'bgsfhd.jpg')), (WIDTH, HEIGHT))
-RYU_STAND = pygame.transform.scale(pygame.image.load(os.path.join('static', 'RyuStand.png')), (57*2, 105*2))
-RYU_JUMP = pygame.transform.scale(pygame.image.load(os.path.join('static', 'RyuJump.png')), (42*2, 69*2))
-RYU_STOOP = pygame.transform.scale(pygame.image.load(os.path.join('static', 'RyuStoop.png')), (53*2, 71*2))
-RYU_STATIC_PUNCH = pygame.transform.scale(pygame.image.load(os.path.join('static', 'RyuStaticPunch.png')), (79*2, 97*2))
-RYU_HADOUKEN = pygame.transform.scale(pygame.image.load(os.path.join('static', 'RyuHdk.png')), (88*2, 92*2))
-HADOUKEN = pygame.transform.scale(pygame.image.load(os.path.join('static', 'Hadouken.png')), (33*2, 33*2))
+BGSF = pygame.transform.scale(pygame.image.load(os.path.join('../static', 'bgsfhd.jpg')), (WIDTH, HEIGHT))
+RYU_STAND = pygame.transform.scale(pygame.image.load(os.path.join('../static', 'RyuStand.png')), (57*2, 105*2))
+RYU_JUMP = pygame.transform.scale(pygame.image.load(os.path.join('../static', 'RyuJump.png')), (42*2, 69*2))
+RYU_STOOP = pygame.transform.scale(pygame.image.load(os.path.join('../static', 'RyuStoop.png')), (53*2, 71*2))
+RYU_STATIC_PUNCH = pygame.transform.scale(pygame.image.load(os.path.join('../static', 'RyuStaticPunch.png')), (79*2, 97*2))
+RYU_HADOUKEN = pygame.transform.scale(pygame.image.load(os.path.join('../static', 'RyuHdk.png')), (88*2, 92*2))
+HADOUKEN = pygame.transform.scale(pygame.image.load(os.path.join('../static', 'Hadouken.png')), (33*2, 33*2))
 ryuSurface = RYU_JUMP
 
 RYU_HIT = pygame.USEREVENT + 1
@@ -110,14 +110,14 @@ def main():
                     hadoukens.append(hadouken)
                     lastHadouken = DT.datetime.now()
 
-<<<<<<< HEAD:testRasp.py
+
                 #if event.key == pygame.K_z and not keys_pressed[pygame.K_s]:
                     #jumping = True
-=======
+
 
                 if event.key == pygame.K_z and not keys_pressed[pygame.K_s]:
                     jumping = True
->>>>>>> 4b80858f5d20685339af275beeeda516c64e8785:GPIOScripts/testRasp.py
+
 
         if GPIO.input(BUTTON_PIN_3) == GPIO.HIGH and not GPIO.input(BUTTON_PIN) == GPIO.HIGH:
             jumping = True
