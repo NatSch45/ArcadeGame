@@ -1,5 +1,3 @@
-
-
 class Player:
     nbrOfPlayers = 0
 

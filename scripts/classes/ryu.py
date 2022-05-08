@@ -1,11 +1,13 @@
 from scripts.classes.character import Character
 from scripts.surfaces import *
 from scripts.consts import *
+from scripts.classes.player import Player
 import datetime as DT
 
 class Ryu(Character):
     def __init__(self, defaultPosX, defaultPosY, standWidth, standHeight) -> None:
         self.hadoukens = []
+        self.direction = Player.nbrOfPlayers == 1 # True if right directed, left otherwise
 
         self.startHadouken = DT.datetime.now() - DT.timedelta(seconds=0.5) # Cooldown for hadouken position animation
         self.startPunch = DT.datetime.now() - DT.timedelta(seconds=0.5) # Cooldown for punch animation
@@ -16,23 +18,10 @@ class Ryu(Character):
     
     def handleHadoukens(self):
         for hadouken in self.hadoukens:
-            hadouken.x += HADOUKEN_VEL
-            if hadouken.x > WIDTH:
+            hadouken.x += (HADOUKEN_VEL if self.direction else -HADOUKEN_VEL)
+            if hadouken.x > WIDTH or hadouken.x < 0 - 66:
                 self.hadoukens.remove(hadouken)
 
-    def getStandDrawing(self):
-        return RYU_STAND
-    def getStoopDrawing(self):
-        return RYU_STOOP
-    def getJumpDrawing(self):
-        return RYU_JUMP
-    def getStaticPunchDrawing(self):
-        return RYU_STATIC_PUNCH
-    def getStaticKickDrawing(self):
-        return RYU_STATIC_KICK
-    def getHdkPosDrawing(self):
-        return RYU_HADOUKEN
-    
     def getStartHadouken(self):
         return self.startHadouken
     def getStartPunch(self):
@@ -46,3 +35,17 @@ class Ryu(Character):
         self.startPunch = newStartPunch
     def setStartKick(self, newStartKick):
         self.startKick = newStartKick
+
+    def getStandDrawing(self):
+        return RYU_STAND if self.direction else RYU_STAND_REVERSE
+    def getStoopDrawing(self):
+        return RYU_STOOP if self.direction else RYU_STOOP_REVERSE
+    def getJumpDrawing(self):
+        return RYU_JUMP if self.direction else RYU_JUMP_REVERSE
+    def getStaticPunchDrawing(self):
+        return RYU_STATIC_PUNCH if self.direction else RYU_STATIC_PUNCH_REVERSE
+    def getStaticKickDrawing(self):
+        return RYU_STATIC_KICK if self.direction else RYU_STATIC_KICK_REVERSE
+    def getHdkPosDrawing(self):
+        return RYU_HADOUKEN if self.direction else RYU_HADOUKEN_REVERSE
+    

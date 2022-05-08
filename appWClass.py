@@ -19,30 +19,33 @@ def drawWindow(players):
     WIN.blit(BGSF, (0, 0)) # Draw background image
 
     for player in players:
+        player.character.displayLifebar(WIN)
         fontPlayer = pygame.font.Font(os.path.join('static/font', 'ARCADE_N.TTF'), 20)
         fontCharacter = pygame.font.Font(os.path.join('static/font', 'ARCADE_N.TTF'), 20)
         textPlayer = fontPlayer.render(player.name, True, (255, 255, 255))
         textCharacter = fontCharacter.render(player.character.name, True, (200, 200, 200))
-        WIN.blit(textPlayer, (20, 30))
-        WIN.blit(textCharacter, (20, 60))
+        textPos = 10 if player.name == "Player 1" else 730
+        WIN.blit(textPlayer, (textPos, 10))
+        WIN.blit(textCharacter, (textPos, 40))
 
         WIN.blit(player.character.drawing, (player.character.surface.x, player.character.surface.y)) # Draw Character
 
         for hadouken in player.character.hadoukens:
-            WIN.blit(HADOUKEN, (hadouken.x + 10, hadouken.y - 5))
+            if player.character.direction: # RIGHT DIRECTION HADOUKEN
+                WIN.blit(HADOUKEN, (hadouken.x + 10, hadouken.y - 5))
+            else: # LEFT DIRECTION HADOUKEN
+                WIN.blit(REVERSE_HADOUKEN, (hadouken.x + 10, hadouken.y - 5))
 
     pygame.display.update()
 
 def main():
     players = [Player("Player 1")]
-    twoPlayers = False
+    players[0].setCharacter(Ryu(150, 215, 46*2, 92*2)) # (posX, posY, width, height)
+
+    twoPlayers = True
     if twoPlayers :
         players.append(Player("Player 2"))
-
-    players[0].setCharacter(Ryu(150, 215, 57*2, 105*2)) # (posX, posY, width, height)
-    
-    jumping = False
-    yVelocity = JUMP_HEIGHT
+        players[1].setCharacter(Ken(650, 215, 47*2, 92*2)) # (posX, posY, width, height)
 
     clock = pygame.time.Clock()
     run = True
@@ -56,24 +59,32 @@ def main():
                 run = False
             
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_LCTRL and len(players[0].character.hadoukens) < MAX_HADOUKENS and not jumping:
-                    hadouken = pygame.Rect(players[0].character.surface.x + players[0].character.surface.width, 245, 33*2, 33*2)
-                    players[0].character.hadoukens.append(hadouken)
-                    players[0].character.setStartHadouken(DT.datetime.now())
-                    hadoukenSound = mixer.Sound('static/sound/hadouken.wav')
-                    hadoukenSound.play()
-                
-                if event.key == pygame.K_SPACE and DT.datetime.now() > players[0].character.getStartPunch() + DT.timedelta(seconds=0.3):
-                    players[0].character.setStartPunch(DT.datetime.now())
-                if event.key == pygame.K_LALT and DT.datetime.now() > players[0].character.getStartKick() + DT.timedelta(seconds=0.3):
-                    players[0].character.setStartKick(DT.datetime.now())
+                for player in players:
+                    c = player.character
+                    if event.key == (pygame.K_LCTRL if c.isFirst else pygame.K_RSHIFT) and len(c.hadoukens) < MAX_HADOUKENS and not c.jumping:
+                        hadouken = pygame.Rect(c.surface.x + c.surface.width + 35 if c.direction else c.surface.x - 50, 245, 33*2, 33*2)
+                        c.hadoukens.append(hadouken)
+                        c.setStartHadouken(DT.datetime.now())
+                        hadoukenSound = mixer.Sound('static/sound/hadouken.wav')
+                        hadoukenSound.play()
+                    
+                    if event.key == (pygame.K_SPACE if c.isFirst else pygame.K_EXCLAIM) and DT.datetime.now() > c.getStartPunch() + DT.timedelta(seconds=0.3): # PUNCH
+                        c.attacking = True
+                        c.replace = "Punch"
+                        c.setStartPunch(DT.datetime.now())
 
-                if event.key == pygame.K_z and not keys_pressed[pygame.K_s]:
-                    jumping = True
+                    if event.key == (pygame.K_LALT if c.isFirst else pygame.K_RCTRL) and DT.datetime.now() > c.getStartKick() + DT.timedelta(seconds=0.3): # KICK
+                        c.attacking = True
+                        c.replace = "Kick"
+                        c.setStartKick(DT.datetime.now())
 
-        jumping, yVelocity = players[0].character.jumps(jumping, yVelocity)
-        players[0].character.movements(keys_pressed, jumping)
-        players[0].character.handleHadoukens()
+                    if event.key == (pygame.K_z if c.isFirst else pygame.K_UP) and not keys_pressed[pygame.K_s]: # JUMP
+                        c.jumping = True
+
+        for player in players:
+            player.character.jumps()
+            player.character.movements(keys_pressed)
+            player.character.handleHadoukens()
 
         drawWindow(players)
 

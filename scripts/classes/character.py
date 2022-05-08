@@ -1,79 +1,104 @@
 import pygame
 from scripts.surfaces import *
 from scripts.consts import *
+from scripts.classes.player import Player
 import datetime as DT
 
 class Character:
     def __init__(self, defaultPosX, defaultPosY, standWidth, standHeight) -> None:
-        self.drawing = None
+        self.drawing = self.getStandDrawing()
+        self.jumping = False
+        self.attacking = False
+        self.replace = ""
+        self.yVelocity = JUMP_HEIGHT
+        self.isFirst = Player.nbrOfPlayers == 1
+        self.direction = Player.nbrOfPlayers == 1 # True if right directed, left otherwise
         self.defaultXPos = defaultPosX
         self.defaultYPos = defaultPosY
         self.standWidth = standWidth
         self.standHeight = standHeight
         self.surface = pygame.Rect(defaultPosX, defaultPosY, standWidth, standHeight)
+        self.maxHp = 100
+        self.hp = self.maxHp
         pass
 
-    def movements(self, keys_pressed, jumping):
+    def movements(self, keys_pressed):
 
-        if keys_pressed[pygame.K_q] and self.surface.x - VEL > 0 and self.drawing != self.getHdkPosDrawing(): # LEFT
+        if (keys_pressed[pygame.K_q] if self.isFirst else keys_pressed[pygame.K_LEFT]) and self.surface.x - VEL > 0 and self.drawing != self.getHdkPosDrawing(): # LEFT
             if keys_pressed[pygame.K_s]:
                 self.surface.x -= 2
             else:
-                self.surface.x -= VEL - 1
+                self.surface.x -= (VEL - 1 if self.direction else VEL)
 
-        if keys_pressed[pygame.K_d] and self.surface.x + VEL + self.surface.width < WIDTH and self.drawing != self.getHdkPosDrawing(): # RIGHT
+        if (keys_pressed[pygame.K_d] if self.isFirst else keys_pressed[pygame.K_RIGHT]) and self.surface.x + VEL + self.surface.width < WIDTH and self.drawing != self.getHdkPosDrawing(): # RIGHT
             if keys_pressed[pygame.K_s]:
                 self.surface.x += 2
             else:
-                self.surface.x += VEL
+                self.surface.x += (VEL if self.direction else VEL - 1)
 
-        if keys_pressed[pygame.K_s] and not jumping and self.drawing != self.getHdkPosDrawing(): # STOOP
-            self.surface.y = 280
+        if (keys_pressed[pygame.K_s] if self.isFirst else keys_pressed[pygame.K_DOWN]) and not self.jumping and self.drawing != self.getHdkPosDrawing(): # STOOP
             self.drawing = self.getStoopDrawing()
-        elif self.drawing == self.getHdkPosDrawing():
-            self.surface.y = 233
         elif self.drawing == self.getStaticPunchDrawing():
-            if self.surface.x + self.surface.width < WIDTH:
-                self.surface.x += 1
-            self.surface.y = 225
+            if self.direction:
+                if self.surface.x + self.surface.width < WIDTH:
+                    self.surface.x += 1
+            else:
+                if self.surface.x + self.surface.width > 0:
+                    self.surface.x -= 1
         elif self.drawing == self.getStaticKickDrawing():
-            if self.surface.x + self.surface.width < WIDTH:
-                self.surface.x += 1
-            self.surface.y = 240
-        elif not jumping:
+            if self.direction:
+                if self.surface.x + self.surface.width < WIDTH:
+                    self.surface.x += 1
+            else:
+                if self.surface.x + self.surface.width > 0:
+                    self.surface.x -= 1
+        elif not self.jumping:
             self.surface.y = self.defaultYPos
         
-        if not jumping:
+        if not self.jumping:
             self.surface.y = FLOOR - self.drawing.get_height()
             
         pass
         
     
-    def jumps(self, jumping, yVelocity):
+    def jumps(self):
 
-        if jumping: # JUMP
-            self.surface.y -= yVelocity
-            yVelocity -= Y_GRAVITY
-            if yVelocity < -JUMP_HEIGHT:
-                jumping = False
-                yVelocity = JUMP_HEIGHT
+        if self.jumping: # JUMP
+            self.surface.y -= self.yVelocity
+            self.yVelocity -= Y_GRAVITY
+            if self.yVelocity < -JUMP_HEIGHT:
+                self.jumping = False
+                self.yVelocity = JUMP_HEIGHT
             self.drawing = self.getJumpDrawing()
-        elif DT.datetime.now() < self.startHadouken + DT.timedelta(seconds=0.3):
+        elif DT.datetime.now() < self.startHadouken + DT.timedelta(seconds=0.3): # HADOUKEN
             self.drawing = self.getHdkPosDrawing()
-        elif DT.datetime.now() < self.startPunch + DT.timedelta(seconds=0.2):
+        elif DT.datetime.now() < self.startPunch + DT.timedelta(seconds=0.2): # PUNCH
+            if self.attacking and not self.direction :
+                self.surface.x -= 52
+                self.attacking = False
             self.drawing = self.getStaticPunchDrawing()
-        elif DT.datetime.now() < self.startKick + DT.timedelta(seconds=0.2):
+        elif DT.datetime.now() < self.startKick + DT.timedelta(seconds=0.2): # KICK
+            if self.attacking and not self.direction :
+                self.surface.x -= 35
+                self.attacking = False
             self.drawing = self.getStaticKickDrawing()
         else:
+            if self.replace == "Punch" and not self.direction :
+                self.surface.x += 45
+                self.replace = ""
+            elif self.replace == "Kick" and not self.direction :
+                self.surface.x += 35
+                self.replace = ""
             self.surface.y = self.defaultYPos
             self.drawing = self.getStandDrawing()
+    
+    def displayLifebar(self, win):
+        lifeBarRect = pygame.Rect(185 if self.isFirst else 460 + (self.maxHp - self.hp) * 2.5, 10, self.hp * 2.5, 30)
+        pygame.draw.rect(win, GREEN if self.hp > 60 else (ORANGE if self.hp > 30 else RED), lifeBarRect)
         
-        
-        return (jumping, yVelocity)
-
 
     """
-    Methods available in inherited classes :
+    Methods available in derived classes :
     - getStandDrawing()
     - getStoopDrawing()
     - getJumpDrawing()
