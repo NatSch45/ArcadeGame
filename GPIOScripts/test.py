@@ -29,13 +29,13 @@ MAX_HADOUKENS = 1
 Y_GRAVITY = 1
 JUMP_HEIGHT = 19
 
-BGSF = pygame.transform.scale(pygame.image.load(os.path.join('../static', 'bgsfhd.jpg')), (WIDTH, HEIGHT))
-RYU_STAND = pygame.transform.scale(pygame.image.load(os.path.join('../static', 'RyuStand.png')), (57*2, 105*2))
-RYU_JUMP = pygame.transform.scale(pygame.image.load(os.path.join('../static', 'RyuJump.png')), (42*2, 69*2))
-RYU_STOOP = pygame.transform.scale(pygame.image.load(os.path.join('../static', 'RyuStoop.png')), (53*2, 71*2))
-RYU_STATIC_PUNCH = pygame.transform.scale(pygame.image.load(os.path.join('../static', 'RyuStaticPunch.png')), (79*2, 97*2))
-RYU_HADOUKEN = pygame.transform.scale(pygame.image.load(os.path.join('../static', 'RyuHdk.png')), (88*2, 92*2))
-HADOUKEN = pygame.transform.scale(pygame.image.load(os.path.join('../static', 'Hadouken.png')), (33*2, 33*2))
+BGSF = pygame.transform.scale(pygame.image.load(os.path.join('../static/img', 'bgsfhd.jpg')), (WIDTH, HEIGHT))
+RYU_STAND = pygame.transform.scale(pygame.image.load(os.path.join('../static/img', 'RyuStand.png')), (57*2, 105*2))
+RYU_JUMP = pygame.transform.scale(pygame.image.load(os.path.join('../static/img', 'RyuJump.png')), (42*2, 69*2))
+RYU_STOOP = pygame.transform.scale(pygame.image.load(os.path.join('../static/img', 'RyuStoop.png')), (53*2, 71*2))
+RYU_STATIC_PUNCH = pygame.transform.scale(pygame.image.load(os.path.join('../static/img', 'RyuStaticPunch.png')), (79*2, 97*2))
+RYU_HADOUKEN = pygame.transform.scale(pygame.image.load(os.path.join('../static/img', 'RyuHdk.png')), (88*2, 92*2))
+HADOUKEN = pygame.transform.scale(pygame.image.load(os.path.join('../static/img', 'Hadouken.png')), (33*2, 33*2))
 ryuSurface = RYU_JUMP
 
 RYU_HIT = pygame.USEREVENT + 1

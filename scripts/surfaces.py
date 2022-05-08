@@ -15,4 +15,4 @@ RYU_HADOUKEN = pygame.transform.scale(pygame.image.load(os.path.join('static/img
 #* KEN CHARACTER SURFACES
 
 #* HADOUKEN
-HADOUKEN = pygame.transform.scale(pygame.image.load(os.path.join('static/img', 'hadouken.png')), (33*2, 33*2))
+HADOUKEN = pygame.transform.scale(pygame.image.load(os.path.join('static/img', 'Hadouken.png')), (33*2, 33*2))
