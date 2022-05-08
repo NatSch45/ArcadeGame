@@ -1,187 +1,103 @@
-import pygame
+import pygame, sys
+from button import Button
 
+pygame.init()
 
+SCREEN = pygame.display.set_mode((1280, 720))
+pygame.display.set_caption("Menu")
 
-class Game():
-    def __init__(self):
-        pygame.init()
-        self.running, self.playing = True, False
-        self.UP_KEY, self.DOWN_KEY, self.START_KEY, self.BACK_KEY = False, False, False, False
-        self.DISPLAY_W, self.DISPLAY_H = 480, 270
-        self.display = pygame.Surface((self.DISPLAY_W,self.DISPLAY_H))
-        self.window = pygame.display.set_mode(((self.DISPLAY_W,self.DISPLAY_H)))
-        self.font_name = '8-BIT WONDER.TTF'
-        #self.font_name = pygame.font.get_default_font()
-        self.BLACK, self.WHITE = (0, 0, 0), (255, 255, 255)
-        self.main_menu = MainMenu(self)
-        self.options = OptionsMenu(self)
-        self.credits = CreditsMenu(self)
-        self.curr_menu = self.main_menu
+BG = pygame.image.load("assets/Background.png")
 
-    def game_loop(self):
-        while self.playing:
-            self.check_events()
-            if self.START_KEY:
-                self.playing= False
-            self.display.fill(self.BLACK)
-            self.draw_text('Thanks for Playing', 20, self.DISPLAY_W/2, self.DISPLAY_H/2)
-            self.window.blit(self.display, (0,0))
-            pygame.display.update()
-            self.reset_keys()
+def get_font(size): # Returns Press-Start-2P in the desired size
+    return pygame.font.Font("assets/font.ttf", size)
 
+def play():
+    while True:
+        PLAY_MOUSE_POS = pygame.mouse.get_pos()
 
+        SCREEN.fill("black")
 
-    def check_events(self):
+        PLAY_TEXT = get_font(45).render("This is the PLAY screen.", True, "White")
+        PLAY_RECT = PLAY_TEXT.get_rect(center=(640, 260))
+        SCREEN.blit(PLAY_TEXT, PLAY_RECT)
+
+        PLAY_BACK = Button(image=None, pos=(640, 460), 
+                            text_input="BACK", font=get_font(75), base_color="White", hovering_color="Green")
+
+        PLAY_BACK.changeColor(PLAY_MOUSE_POS)
+        PLAY_BACK.update(SCREEN)
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                self.running, self.playing = False, False
-                self.curr_menu.run_display = False
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_RETURN:
-                    self.START_KEY = True
-                if event.key == pygame.K_BACKSPACE:
-                    self.BACK_KEY = True
-                if event.key == pygame.K_DOWN:
-                    self.DOWN_KEY = True
-                if event.key == pygame.K_UP:
-                    self.UP_KEY = True
+                pygame.quit()
+                sys.exit()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if PLAY_BACK.checkForInput(PLAY_MOUSE_POS):
+                    main_menu()
 
-    def reset_keys(self):
-        self.UP_KEY, self.DOWN_KEY, self.START_KEY, self.BACK_KEY = False, False, False, False
-
-    def draw_text(self, text, size, x, y ):
-        font = pygame.font.Font(self.font_name,size)
-        text_surface = font.render(text, True, self.WHITE)
-        text_rect = text_surface.get_rect()
-        text_rect.center = (x,y)
-        self.display.blit(text_surface,text_rect)
-
-class Menu():
-    def __init__(self, game):
-        self.game = game
-        self.mid_w, self.mid_h = self.game.DISPLAY_W / 2, self.game.DISPLAY_H / 2
-        self.run_display = True
-        self.cursor_rect = pygame.Rect(0, 0, 20, 20)
-        self.offset = - 100
-
-    def draw_cursor(self):
-        self.game.draw_text('*', 15, self.cursor_rect.x, self.cursor_rect.y)
-
-    def blit_screen(self):
-        self.game.window.blit(self.game.display, (0, 0))
         pygame.display.update()
-        self.game.reset_keys()
+    
+def options():
+    while True:
+        OPTIONS_MOUSE_POS = pygame.mouse.get_pos()
 
-class MainMenu(Menu):
-    def __init__(self, game):
-        Menu.__init__(self, game)
-        self.state = "Start"
-        self.startx, self.starty = self.mid_w, self.mid_h + 30
-        self.optionsx, self.optionsy = self.mid_w, self.mid_h + 50
-        self.creditsx, self.creditsy = self.mid_w, self.mid_h + 70
-        self.cursor_rect.midtop = (self.startx + self.offset, self.starty)
+        SCREEN.fill("white")
 
-    def display_menu(self):
-        self.run_display = True
-        while self.run_display:
-            self.game.check_events()
-            self.check_input()
-            self.game.display.fill(self.game.BLACK)
-            self.game.draw_text('Main Menu', 20, self.game.DISPLAY_W / 2, self.game.DISPLAY_H / 2 - 20)
-            self.game.draw_text("Start Game", 20, self.startx, self.starty)
-            self.game.draw_text("Options", 20, self.optionsx, self.optionsy)
-            self.game.draw_text("Credits", 20, self.creditsx, self.creditsy)
-            self.draw_cursor()
-            self.blit_screen()
+        OPTIONS_TEXT = get_font(45).render("This is the OPTIONS screen.", True, "Black")
+        OPTIONS_RECT = OPTIONS_TEXT.get_rect(center=(640, 260))
+        SCREEN.blit(OPTIONS_TEXT, OPTIONS_RECT)
 
+        OPTIONS_BACK = Button(image=None, pos=(640, 460), 
+                            text_input="BACK", font=get_font(75), base_color="Black", hovering_color="Green")
 
-    def move_cursor(self):
-        if self.game.DOWN_KEY:
-            if self.state == 'Start':
-                self.cursor_rect.midtop = (self.optionsx + self.offset, self.optionsy)
-                self.state = 'Options'
-            elif self.state == 'Options':
-                self.cursor_rect.midtop = (self.creditsx + self.offset, self.creditsy)
-                self.state = 'Credits'
-            elif self.state == 'Credits':
-                self.cursor_rect.midtop = (self.startx + self.offset, self.starty)
-                self.state = 'Start'
-        elif self.game.UP_KEY:
-            if self.state == 'Start':
-                self.cursor_rect.midtop = (self.creditsx + self.offset, self.creditsy)
-                self.state = 'Credits'
-            elif self.state == 'Options':
-                self.cursor_rect.midtop = (self.startx + self.offset, self.starty)
-                self.state = 'Start'
-            elif self.state == 'Credits':
-                self.cursor_rect.midtop = (self.optionsx + self.offset, self.optionsy)
-                self.state = 'Options'
+        OPTIONS_BACK.changeColor(OPTIONS_MOUSE_POS)
+        OPTIONS_BACK.update(SCREEN)
 
-    def check_input(self):
-        self.move_cursor()
-        if self.game.START_KEY:
-            if self.state == 'Start':
-                self.game.playing = True
-            elif self.state == 'Options':
-                self.game.curr_menu = self.game.options
-            elif self.state == 'Credits':
-                self.game.curr_menu = self.game.credits
-            self.run_display = False
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if OPTIONS_BACK.checkForInput(OPTIONS_MOUSE_POS):
+                    main_menu()
 
-class OptionsMenu(Menu):
-    def __init__(self, game):
-        Menu.__init__(self, game)
-        self.state = 'Volume'
-        self.volx, self.voly = self.mid_w, self.mid_h + 20
-        self.controlsx, self.controlsy = self.mid_w, self.mid_h + 40
-        self.cursor_rect.midtop = (self.volx + self.offset, self.voly)
+        pygame.display.update()
 
-    def display_menu(self):
-        self.run_display = True
-        while self.run_display:
-            self.game.check_events()
-            self.check_input()
-            self.game.display.fill((0, 0, 0))
-            self.game.draw_text('Options', 20, self.game.DISPLAY_W / 2, self.game.DISPLAY_H / 2 - 30)
-            self.game.draw_text("Volume", 15, self.volx, self.voly)
-            self.game.draw_text("Controls", 15, self.controlsx, self.controlsy)
-            self.draw_cursor()
-            self.blit_screen()
+def main_menu():
+    while True:
+        SCREEN.blit(BG, (0, 0))
 
-    def check_input(self):
-        if self.game.BACK_KEY:
-            self.game.curr_menu = self.game.main_menu
-            self.run_display = False
-        elif self.game.UP_KEY or self.game.DOWN_KEY:
-            if self.state == 'Volume':
-                self.state = 'Controls'
-                self.cursor_rect.midtop = (self.controlsx + self.offset, self.controlsy)
-            elif self.state == 'Controls':
-                self.state = 'Volume'
-                self.cursor_rect.midtop = (self.volx + self.offset, self.voly)
-        elif self.game.START_KEY:
-            # TO-DO: Create a Volume Menu and a Controls Menu
-            pass
+        MENU_MOUSE_POS = pygame.mouse.get_pos()
 
-class CreditsMenu(Menu):
-    def __init__(self, game):
-        Menu.__init__(self, game)
+        MENU_TEXT = get_font(100).render("MAIN MENU", True, "#b68f40")
+        MENU_RECT = MENU_TEXT.get_rect(center=(640, 100))
 
-    def display_menu(self):
-        self.run_display = True
-        while self.run_display:
-            self.game.check_events()
-            if self.game.START_KEY or self.game.BACK_KEY:
-                self.game.curr_menu = self.game.main_menu
-                self.run_display = False
-            self.game.display.fill(self.game.BLACK)
-            self.game.draw_text('Credits', 20, self.game.DISPLAY_W / 2, self.game.DISPLAY_H / 2 - 20)
-            self.game.draw_text('Made by me', 15, self.game.DISPLAY_W / 2, self.game.DISPLAY_H / 2 + 10)
-            self.blit_screen()
+        PLAY_BUTTON = Button(image=pygame.image.load("assets/Play Rect.png"), pos=(640, 250), 
+                            text_input="PLAY", font=get_font(75), base_color="#d7fcd4", hovering_color="White")
+        OPTIONS_BUTTON = Button(image=pygame.image.load("assets/Options Rect.png"), pos=(640, 400), 
+                            text_input="OPTIONS", font=get_font(75), base_color="#d7fcd4", hovering_color="White")
+        QUIT_BUTTON = Button(image=pygame.image.load("assets/Quit Rect.png"), pos=(640, 550), 
+                            text_input="QUIT", font=get_font(75), base_color="#d7fcd4", hovering_color="White")
 
+        SCREEN.blit(MENU_TEXT, MENU_RECT)
 
-g = Game()
+        for button in [PLAY_BUTTON, OPTIONS_BUTTON, QUIT_BUTTON]:
+            button.changeColor(MENU_MOUSE_POS)
+            button.update(SCREEN)
+        
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if PLAY_BUTTON.checkForInput(MENU_MOUSE_POS):
+                    play()
+                if OPTIONS_BUTTON.checkForInput(MENU_MOUSE_POS):
+                    options()
+                if QUIT_BUTTON.checkForInput(MENU_MOUSE_POS):
+                    pygame.quit()
+                    sys.exit()
 
-while g.running:
-    g.curr_menu.display_menu()
-    g.game_loop()
+        pygame.display.update()
+
+main_menu()
