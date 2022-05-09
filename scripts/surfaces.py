@@ -5,10 +5,13 @@ from scripts.consts import WIDTH, HEIGHT
 IMG_DIR = 'static/img'
 MULTIPLIER = 2
 
+#* LOGO
+LOGO = pygame.transform.scale(pygame.image.load(os.path.join(IMG_DIR, 'Logo.png')), (222*1.5, 104*1.5))
 #* BACKGROUND STREET FIGHTER HD
 BGSF = pygame.transform.scale(pygame.image.load(os.path.join(IMG_DIR, 'bgsfhd.jpg')), (WIDTH, HEIGHT))
 
 #* RYU CHARACTER SURFACES
+RYU_NAME = pygame.transform.scale(pygame.image.load(os.path.join(IMG_DIR, 'ryu/RyuName.png')), (63*MULTIPLIER, 16*MULTIPLIER))
 # RIGHT DIRECTED (default)
 RYU_STAND = pygame.transform.scale(pygame.image.load(os.path.join(IMG_DIR, 'ryu/RyuStand.png')), (46*MULTIPLIER, 92*MULTIPLIER))
 RYU_JUMP = pygame.transform.scale(pygame.image.load(os.path.join(IMG_DIR, 'ryu/RyuJump.png')), (36*MULTIPLIER, 64*MULTIPLIER))
@@ -25,6 +28,7 @@ RYU_STATIC_KICK_REVERSE = pygame.transform.scale(pygame.image.load(os.path.join(
 RYU_HADOUKEN_REVERSE = pygame.transform.scale(pygame.image.load(os.path.join(IMG_DIR, 'ryu/ReverseRyuHdk.png')), (85*MULTIPLIER, 89*MULTIPLIER))
 
 #* KEN CHARACTER SURFACES
+KEN_NAME = pygame.transform.scale(pygame.image.load(os.path.join(IMG_DIR, 'ken/KenName.png')), (63*MULTIPLIER, 16*MULTIPLIER))
 # RIGHT DIRECTED (default)
 KEN_STAND = pygame.transform.scale(pygame.image.load(os.path.join(IMG_DIR, 'ken/KenStand.png')), (47*MULTIPLIER, 92*MULTIPLIER))
 KEN_JUMP = pygame.transform.scale(pygame.image.load(os.path.join(IMG_DIR, 'ken/KenJump.png')), (36*MULTIPLIER, 64*MULTIPLIER))
@@ -41,6 +45,7 @@ KEN_STATIC_KICK_REVERSE = pygame.transform.scale(pygame.image.load(os.path.join(
 KEN_HADOUKEN_REVERSE = pygame.transform.scale(pygame.image.load(os.path.join(IMG_DIR, 'ken/ReverseKenHdk.png')), (85*MULTIPLIER, 89*MULTIPLIER))
 
 #* GEKI CHARACTER SURFACES
+GEKI_NAME = pygame.transform.scale(pygame.image.load(os.path.join(IMG_DIR, 'geki/GekiName.png')), (63*MULTIPLIER, 16*MULTIPLIER))
 # RIGHT DIRECTED (default)
 GEKI_STAND = pygame.transform.scale(pygame.image.load(os.path.join(IMG_DIR, 'geki/GekiStand.png')), (56*MULTIPLIER, 92*MULTIPLIER))
 GEKI_JUMP = pygame.transform.scale(pygame.image.load(os.path.join(IMG_DIR, 'geki/GekiJump.png')), (46*MULTIPLIER, 64*MULTIPLIER))

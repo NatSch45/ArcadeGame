@@ -24,6 +24,7 @@ def drawWindow(players):
         textGameOver = FONT_GAME_OVER.render("GAME OVER", True, WHITE)
 
         if Player.isGameOver :
+            WIN.blit(LOGO, (WIDTH/2 - LOGO.get_width()/2, HEIGHT/2 - LOGO.get_height()/2 - 155))
             WIN.blit(textGameOver, (WIDTH/2 - textGameOver.get_width()/2, HEIGHT/2 - textGameOver.get_height()/2))
             textWinner = FONT_WINNER.render(f'{players[0].name} wins !' if players[1].character == Player.isGameOver else f'{players[1].name} wins !', True, GREY)
             WIN.blit(textWinner, (WIDTH/2 - textWinner.get_width()/2, HEIGHT/2 - textWinner.get_height()/2 + 70))
@@ -31,7 +32,7 @@ def drawWindow(players):
 
         textPos = 10 if player.name == "Player 1" else 730
         WIN.blit(textPlayer, (textPos, 10))
-        WIN.blit(textCharacter, (textPos, 40))
+        WIN.blit(player.character.getNameDrawing(), (textPos, 40))
         
         player.character.displayLifebar()
         WIN.blit(player.character.drawing, (player.character.surface.x, player.character.surface.y)) # Draw Character

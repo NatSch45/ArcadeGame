@@ -55,3 +55,5 @@ class Ken(Character):
         return KEN_HADOUKEN if self.direction else KEN_HADOUKEN_REVERSE
     def getProjectileDrawing(self):
         return HADOUKEN if self.direction else HADOUKEN_REVERSE
+    def getNameDrawing(self):
+        return KEN_NAME

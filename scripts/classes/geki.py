@@ -55,4 +55,6 @@ class Geki(Character):
         return GEKI_HADOUKEN if self.direction else GEKI_HADOUKEN_REVERSE
     def getProjectileDrawing(self):
         return SHURIKEN if self.direction else SHURIKEN_REVERSE
+    def getNameDrawing(self):
+        return GEKI_NAME
     
