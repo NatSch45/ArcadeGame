@@ -44,15 +44,8 @@ def drawWindow(players):
 
     pygame.display.update()
 
-def main():
-    players = [Player("Player 1")]
-    players[0].setCharacter(Geki(150, 215, 46*2, 92*2)) # (posX, posY, width, height)
-
-    twoPlayers = True
-    if twoPlayers :
-        players.append(Player("Player 2"))
-        players[1].setCharacter(Eagle(650, 215, 47*2, 92*2)) # (posX, posY, width, height)
-
+def game(players):
+    
     clock = pygame.time.Clock()
     run = True
 
@@ -96,6 +89,183 @@ def main():
 
         drawWindow(players)
 
+def pickChar(focusPlayer, isFirst):
+    xPos = 150 if isFirst else 650
+    c = None
+    if focusPlayer[0] == 1:
+        c = Ryu(xPos, 215, 46*2, 92*2)
+    elif focusPlayer[1] == 1:
+        c = Ken(xPos, 215, 47*2, 92*2)
+    elif focusPlayer[2] == 1:
+        c = Geki(xPos, 215, 56*2, 92*2)
+    elif focusPlayer[3] == 1:
+        c = Eagle(xPos, 215, 48*2, 93*2)
+
+    return c
+
+def characterChoice():
+    clock = pygame.time.Clock()
+    run = True
+    focusPlayer1 = [1, 0, 0, 0]
+    focusPlayer2 = [1, 0, 0, 0]
+    lastInput = DT.datetime.now()
+
+    while run :
+        clock.tick(FPS)
+
+        WIN.fill(BLACK)
+        textButton1 = FONT_BUTTONS.render("RYU", True, RED)
+        textButton2 = FONT_BUTTONS.render("KEN", True, RED)
+        textButton3 = FONT_BUTTONS.render("GEKI", True, RED)
+        textButton4 = FONT_BUTTONS.render("EAGLE", True, RED)
+        WIN.blit(textButton1, (WIDTH/2 - textButton1.get_width()/2, HEIGHT/2 - 150))
+        WIN.blit(textButton2, (WIDTH/2 - textButton2.get_width()/2, HEIGHT/2 - 50))
+        WIN.blit(textButton3, (WIDTH/2 - textButton3.get_width()/2, HEIGHT/2 + 50))
+        WIN.blit(textButton4, (WIDTH/2 - textButton4.get_width()/2, HEIGHT/2 + 150))
+
+        btnRect1 = None
+        btnRect2 = None
+        for id, c in enumerate(focusPlayer1):
+            if c == 1:
+                if id == 0:
+                    btnRect1 = pygame.Rect(WIDTH/2 - textButton1.get_width()/2 - 8, HEIGHT/2 - 150 - 8, textButton1.get_width() + 10, textButton1.get_height() + 10)
+                elif id == 1:
+                    btnRect1 = pygame.Rect(WIDTH/2 - textButton2.get_width()/2 - 8, HEIGHT/2 - 50 - 8, textButton2.get_width() + 10, textButton2.get_height() + 10)
+                elif id == 2:
+                    btnRect1 = pygame.Rect(WIDTH/2 - textButton3.get_width()/2 - 8, HEIGHT/2 + 50 - 8, textButton3.get_width() + 10, textButton3.get_height() + 10)
+                elif id == 3:
+                    btnRect1 = pygame.Rect(WIDTH/2 - textButton4.get_width()/2 - 8, HEIGHT/2 + 150 - 8, textButton4.get_width() + 10, textButton4.get_height() + 10)
+        
+        for id, c in enumerate(focusPlayer2):
+            if c == 1:
+                if id == 0:
+                    btnRect2 = pygame.Rect(WIDTH/2 - textButton1.get_width()/2 - 14, HEIGHT/2 - 150 - 14, textButton1.get_width() + 20, textButton1.get_height() + 20)
+                elif id == 1:
+                    btnRect2 = pygame.Rect(WIDTH/2 - textButton2.get_width()/2 - 14, HEIGHT/2 - 50 - 14, textButton2.get_width() + 20, textButton2.get_height() + 20)
+                elif id == 2:
+                    btnRect2 = pygame.Rect(WIDTH/2 - textButton3.get_width()/2 - 14, HEIGHT/2 + 50 - 14, textButton3.get_width() + 20, textButton3.get_height() + 20)
+                elif id == 3:
+                    btnRect2 = pygame.Rect(WIDTH/2 - textButton4.get_width()/2 - 14, HEIGHT/2 + 150 - 14, textButton4.get_width() + 20, textButton4.get_height() + 20)
+                    
+        pygame.draw.rect(WIN, RED, btnRect1, 2)
+        pygame.draw.rect(WIN, GREEN, btnRect2, 2)
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                run = False
+                
+            if event.type == pygame.KEYDOWN:
+                
+                if event.key == pygame.K_ESCAPE:
+                    run = False
+
+                if event.key == pygame.K_SPACE or event.key == pygame.K_RETURN:
+                    if DT.datetime.now() > lastInput + DT.timedelta(seconds=0.2):
+                        lastInput = DT.datetime.now()
+                        players = [Player("Player 1")]
+                        players[0].setCharacter(pickChar(focusPlayer1, True)) # (posX, posY, width, height)
+
+                        players.append(Player("Player 2"))
+                        players[1].setCharacter(pickChar(focusPlayer2, False)) # (posX, posY, width, height)
+                        game(players)
+                
+                if event.key == pygame.K_s:
+                    if DT.datetime.now() > lastInput + DT.timedelta(seconds=0.2):
+                        for id, c in enumerate(focusPlayer1):
+                            if c == 1:
+                                if id != 3:
+                                    focusPlayer1[id+1] = 1
+                                else:
+                                    focusPlayer1[0] = 1
+                                focusPlayer1[id] = 0
+                                break
+                        lastInput = DT.datetime.now()
+                        break
+                if event.key == pygame.K_z:
+                    if DT.datetime.now() > lastInput + DT.timedelta(seconds=0.2):
+                        for id, c in enumerate(focusPlayer1):
+                            if c == 1:
+                                if id != 0:
+                                    focusPlayer1[id-1] = 1
+                                else:
+                                    focusPlayer1[3] = 1
+                                focusPlayer1[id] = 0
+                                break
+                        lastInput = DT.datetime.now()
+                        break
+                
+                if event.key == pygame.K_DOWN:
+                    if DT.datetime.now() > lastInput + DT.timedelta(seconds=0.2):
+                        for id, c in enumerate(focusPlayer2):
+                            if c == 1:
+                                if id != 3:
+                                    focusPlayer2[id+1] = 1
+                                else:
+                                    focusPlayer2[0] = 1
+                                focusPlayer2[id] = 0
+                                break
+                        lastInput = DT.datetime.now()
+                        break
+                if event.key == pygame.K_UP:
+                    if DT.datetime.now() > lastInput + DT.timedelta(seconds=0.2):
+                        for id, c in enumerate(focusPlayer2):
+                            if c == 1:
+                                if id != 0:
+                                    focusPlayer2[id-1] = 1
+                                else:
+                                    focusPlayer2[3] = 1
+                                focusPlayer2[id] = 0
+                                break
+                        lastInput = DT.datetime.now()
+                        break
+
+        pygame.display.update()
+
+
+def main():
+    clock = pygame.time.Clock()
+    run = True
+    focus = True # True if focus is on PLAY, False if focus is on QUIT
+    lastInput = DT.datetime.now()
+
+    while run:
+        clock.tick(FPS)
+
+        WIN.fill(BLACK)
+        textButton1 = FONT_BUTTONS.render("PLAY", True, RED)
+        textButton2 = FONT_BUTTONS.render("QUIT", True, RED)
+        WIN.blit(textButton1, (WIDTH/2 - textButton1.get_width()/2, HEIGHT/2 - 80))
+        WIN.blit(textButton2, (WIDTH/2 - textButton2.get_width()/2, HEIGHT/2 + 120))
+        btnRect = None
+        if focus:
+            btnRect = pygame.Rect(WIDTH/2 - textButton1.get_width()/2 - 8, HEIGHT/2 - 80 - 8, textButton1.get_width() + 10, textButton1.get_height() + 10)
+        else:
+            btnRect = pygame.Rect(WIDTH/2 - textButton2.get_width()/2 - 8, HEIGHT/2 + 120 - 8, textButton2.get_width() + 10, textButton2.get_height() + 10)
+        pygame.draw.rect(WIN, RED, btnRect, 2)
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                run = False
+            
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    run = False
+
+                if event.key == pygame.K_SPACE or event.key == pygame.K_RETURN:
+                    if DT.datetime.now() > lastInput + DT.timedelta(seconds=0.2):
+                        lastInput = DT.datetime.now()
+                        if focus:
+                            characterChoice()
+                        else:
+                            run = False
+                
+                if event.key == pygame.K_UP or event.key == pygame.K_DOWN:
+                    if DT.datetime.now() > lastInput + DT.timedelta(seconds=0.2):
+                        focus = not focus
+                        lastInput = DT.datetime.now()
+
+        pygame.display.update()
+    
     pygame.quit()
 
 if __name__ == "__main__":
