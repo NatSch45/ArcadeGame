@@ -96,7 +96,7 @@ def main():
             
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_LCTRL and len(hadoukens) < MAX_HADOUKENS and not jumping:
-                    hadouken = pygame.Rect(ryu.x + ryu.width, 245, 33*2, 33*2)
+                    hadouken = pygame.Rect(ryu.x + ryu.width, 245, 28*2, 26*2)
                     hadoukens.append(hadouken)
                     startHadouken = DT.datetime.now()
                     hadoukenSound = mixer.Sound('static/sound/hadouken.wav')
