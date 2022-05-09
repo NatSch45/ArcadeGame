@@ -19,16 +19,23 @@ def drawWindow(players):
     WIN.blit(BGSF, (0, 0)) # Draw background image
 
     for player in players:
-        player.character.displayLifebar(WIN)
-        fontPlayer = pygame.font.Font(os.path.join('static/font', 'ARCADE_N.TTF'), 20)
-        fontCharacter = pygame.font.Font(os.path.join('static/font', 'ARCADE_N.TTF'), 20)
-        textPlayer = fontPlayer.render(player.name, True, (255, 255, 255))
-        textCharacter = fontCharacter.render(player.character.name, True, (200, 200, 200))
+        textPlayer = FONT_PLAYER.render(player.name, True, BLACK)
+        textCharacter = FONT_CHARACTER.render(player.character.name, True, GREY)
+        textGameOver = FONT_GAME_OVER.render("GAME OVER", True, WHITE)
+
+        if Player.isGameOver :
+            WIN.blit(textGameOver, (WIDTH/2 - textGameOver.get_width()/2, HEIGHT/2 - textGameOver.get_height()/2))
+            textWinner = FONT_WINNER.render(f'{players[0].name} wins !' if players[1].character == Player.isGameOver else f'{players[1].name} wins !', True, GREY)
+            WIN.blit(textWinner, (WIDTH/2 - textWinner.get_width()/2, HEIGHT/2 - textWinner.get_height()/2 + 70))
+            break
+
         textPos = 10 if player.name == "Player 1" else 730
         WIN.blit(textPlayer, (textPos, 10))
         WIN.blit(textCharacter, (textPos, 40))
-
+        
+        player.character.displayLifebar()
         WIN.blit(player.character.drawing, (player.character.surface.x, player.character.surface.y)) # Draw Character
+        #* pygame.draw.rect(WIN, (255,0,0), player.character.surface, 2) # Draw character's hitbox
 
         for hadouken in player.character.hadoukens:
             if player.character.direction: # RIGHT DIRECTION HADOUKEN
@@ -62,7 +69,7 @@ def main():
                 for player in players:
                     c = player.character
                     if event.key == (pygame.K_LCTRL if c.isFirst else pygame.K_RSHIFT) and len(c.hadoukens) < MAX_HADOUKENS and not c.jumping:
-                        hadouken = pygame.Rect(c.surface.x + c.surface.width + 35 if c.direction else c.surface.x - 50, 245, 33*2, 33*2)
+                        hadouken = pygame.Rect(c.surface.x + c.surface.width + 35 if c.direction else c.surface.x - 50, 245, 28*2, 26*2)
                         c.hadoukens.append(hadouken)
                         c.setStartHadouken(DT.datetime.now())
                         hadoukenSound = mixer.Sound('static/sound/hadouken.wav')
@@ -82,9 +89,10 @@ def main():
                         c.jumping = True
 
         for player in players:
-            player.character.jumps()
+            opponent = players[1].character if player.name == "Player 1" else players[0].character
+            player.character.jumps(opponent)
             player.character.movements(keys_pressed)
-            player.character.handleHadoukens()
+            player.character.handleHadoukens(opponent)
 
         drawWindow(players)
 

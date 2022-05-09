@@ -8,6 +8,7 @@ class Ryu(Character):
     def __init__(self, defaultPosX, defaultPosY, standWidth, standHeight) -> None:
         self.hadoukens = []
         self.direction = Player.nbrOfPlayers == 1 # True if right directed, left otherwise
+        self.hit = FIRST_CHARACTER_HIT if Player.nbrOfPlayers == 1 else SECOND_CHARACTER_HIT
 
         self.startHadouken = DT.datetime.now() - DT.timedelta(seconds=0.5) # Cooldown for hadouken position animation
         self.startPunch = DT.datetime.now() - DT.timedelta(seconds=0.5) # Cooldown for punch animation
@@ -16,9 +17,13 @@ class Ryu(Character):
         self.name = "Ryu"
         super().__init__(defaultPosX, defaultPosY, standWidth, standHeight)
     
-    def handleHadoukens(self):
+    def handleHadoukens(self, opponent):
         for hadouken in self.hadoukens:
             hadouken.x += (HADOUKEN_VEL if self.direction else -HADOUKEN_VEL)
+            if opponent.surface.colliderect(hadouken):
+                pygame.event.post(pygame.event.Event(opponent.hit))
+                self.hadoukens.remove(hadouken)
+                opponent.getHit(opponent, HADOUKEN_DAMAGE)
             if hadouken.x > WIDTH or hadouken.x < 0 - 66:
                 self.hadoukens.remove(hadouken)
 

@@ -10,6 +10,7 @@ class Character:
         self.jumping = False
         self.attacking = False
         self.replace = ""
+        self.damageCooldown = DT.datetime.now()
         self.yVelocity = JUMP_HEIGHT
         self.isFirst = Player.nbrOfPlayers == 1
         self.direction = Player.nbrOfPlayers == 1 # True if right directed, left otherwise
@@ -38,6 +39,7 @@ class Character:
 
         if (keys_pressed[pygame.K_s] if self.isFirst else keys_pressed[pygame.K_DOWN]) and not self.jumping and self.drawing != self.getHdkPosDrawing(): # STOOP
             self.drawing = self.getStoopDrawing()
+            self.surface.width, self.surface.height = self.getStoopDrawing().get_width(), self.getStoopDrawing().get_height()
         elif self.drawing == self.getStaticPunchDrawing():
             if self.direction:
                 if self.surface.x + self.surface.width < WIDTH:
@@ -61,40 +63,65 @@ class Character:
         pass
         
     
-    def jumps(self):
+    def jumps(self, opponent):
 
-        if self.jumping: # JUMP
+        if self.jumping: #? JUMP
             self.surface.y -= self.yVelocity
             self.yVelocity -= Y_GRAVITY
             if self.yVelocity < -JUMP_HEIGHT:
                 self.jumping = False
                 self.yVelocity = JUMP_HEIGHT
             self.drawing = self.getJumpDrawing()
-        elif DT.datetime.now() < self.startHadouken + DT.timedelta(seconds=0.3): # HADOUKEN
+            self.surface.width, self.surface.height = self.getJumpDrawing().get_width(), self.getJumpDrawing().get_height()
+
+        elif DT.datetime.now() < self.startHadouken + DT.timedelta(seconds=0.3): #? HADOUKEN
             self.drawing = self.getHdkPosDrawing()
-        elif DT.datetime.now() < self.startPunch + DT.timedelta(seconds=0.2): # PUNCH
-            if self.attacking and not self.direction :
+            self.surface.width, self.surface.height = self.getHdkPosDrawing().get_width(), self.getHdkPosDrawing().get_height()
+
+        elif DT.datetime.now() < self.startPunch + DT.timedelta(seconds=0.2): #? PUNCH
+            if self.attacking and not self.direction and self.surface.x > 0 :
                 self.surface.x -= 52
                 self.attacking = False
             self.drawing = self.getStaticPunchDrawing()
-        elif DT.datetime.now() < self.startKick + DT.timedelta(seconds=0.2): # KICK
-            if self.attacking and not self.direction :
+            self.surface.width, self.surface.height = self.getStaticPunchDrawing().get_width(), self.getStaticPunchDrawing().get_height()
+            if opponent.surface.colliderect(self.surface) and DT.datetime.now() > self.damageCooldown + DT.timedelta(seconds=0.25):
+                pygame.event.post(pygame.event.Event(opponent.hit))
+                opponent.getHit(opponent, PUNCH_DAMAGE)
+                self.damageCooldown = DT.datetime.now()
+
+        elif DT.datetime.now() < self.startKick + DT.timedelta(seconds=0.2): #? KICK
+            if self.attacking and not self.direction and self.surface.x > 0:
                 self.surface.x -= 35
                 self.attacking = False
             self.drawing = self.getStaticKickDrawing()
-        else:
+            self.surface.width, self.surface.height = self.getStaticKickDrawing().get_width(), self.getStaticKickDrawing().get_height()
+            if opponent.surface.colliderect(self.surface) and DT.datetime.now() > self.damageCooldown + DT.timedelta(seconds=0.25):
+                pygame.event.post(pygame.event.Event(opponent.hit))
+                opponent.getHit(opponent, KICK_DAMAGE)
+                self.damageCooldown = DT.datetime.now()
+
+        else: #? STAND
             if self.replace == "Punch" and not self.direction :
-                self.surface.x += 45
+                self.surface.x += 52
                 self.replace = ""
             elif self.replace == "Kick" and not self.direction :
                 self.surface.x += 35
                 self.replace = ""
             self.surface.y = self.defaultYPos
             self.drawing = self.getStandDrawing()
+            self.surface.width, self.surface.height = self.getStandDrawing().get_width(), self.getStandDrawing().get_height()
     
-    def displayLifebar(self, win):
+    def displayLifebar(self):
         lifeBarRect = pygame.Rect(185 if self.isFirst else 460 + (self.maxHp - self.hp) * 2.5, 10, self.hp * 2.5, 30)
-        pygame.draw.rect(win, GREEN if self.hp > 60 else (ORANGE if self.hp > 30 else RED), lifeBarRect)
+        pygame.draw.rect(WIN, GREEN if self.hp > 60 else (ORANGE if self.hp > 30 else RED), lifeBarRect)
+        pygame.draw.rect(WIN, BLACK, (185 if self.isFirst else 460, 10, self.maxHp * 2.5, 30), 2)
+    
+    def getHit(self, opponent, damage):
+        if self.hp - damage > 0:
+            self.hp -= damage
+        else:
+            self.hp = 0
+            Player.isGameOver = opponent
         
 
     """
@@ -103,5 +130,6 @@ class Character:
     - getStoopDrawing()
     - getJumpDrawing()
     - getStaticPunchDrawing()
+    - getStaticKickDrawing()
     - getHdkPosDrawing()
     """
