@@ -86,27 +86,27 @@ def game(players):
                 run = False
             
             # if event.type == pygame.KEYDOWN:
-            for player in players:
-                c = player.character
-                if ((GPIO.input(BUTTON_PIN_5) == GPIO.HIGH and GPIO.input(BUTTON_PIN_7) == GPIO.HIGH) if c.isFirst else ( GPIO.input(BUTTON_PIN_4) == GPIO.HIGH and GPIO.input(BUTTON_PIN_6) == GPIO.HIGH)) and len(c.hadoukens) < MAX_HADOUKENS and not c.jumping::
-                    hadouken = None
-                    hadouken = pygame.Rect(c.surface.x + c.surface.width + 35 if c.direction else c.surface.x - 50, 245 if player.character.name != "Geki" else 300, 28*2, 26*2)
-                    c.hadoukens.append(hadouken)
-                    c.setStartHadouken(DT.datetime.now())
-                    hadoukenSound = mixer.Sound('static/sound/hadouken.wav')
-                    hadoukenSound.play()
+        for player in players:
+            c = player.character
+            if ((GPIO.input(BUTTON_PIN_5) == GPIO.HIGH and GPIO.input(BUTTON_PIN_7) == GPIO.HIGH) if c.isFirst else ( GPIO.input(BUTTON_PIN_4) == GPIO.HIGH and GPIO.input(BUTTON_PIN_6) == GPIO.HIGH)) and len(c.hadoukens) < MAX_HADOUKENS and not c.jumping:
+                hadouken = None
+                hadouken = pygame.Rect(c.surface.x + c.surface.width + 35 if c.direction else c.surface.x - 50, 245 if player.character.name != "Geki" else 300, 28*2, 26*2)
+                c.hadoukens.append(hadouken)
+                c.setStartHadouken(DT.datetime.now())
+                hadoukenSound = mixer.Sound('static/sound/hadouken.wav')
+                hadoukenSound.play()
                     
-            if GPIO.input(BUTTON_PIN_5) == GPIO.HIGH if c.isFirst else GPIO.input(BUTTON_PIN_4) == GPIO.HIGH and DT.datetime.now() > c.getStartPunch() + DT.timedelta(seconds=0.3): # PUNCH
+            if (GPIO.input(BUTTON_PIN_5) == GPIO.HIGH if c.isFirst else GPIO.input(BUTTON_PIN_4) == GPIO.HIGH) and DT.datetime.now() > c.getStartPunch() + DT.timedelta(seconds=0.3): # PUNCH
                 c.attacking = True
                 c.replace = "Punch"
                 c.setStartPunch(DT.datetime.now())
-
-            if GPIO.input(BUTTON_PIN_7) == GPIO.HIGH if c.isFirst else GPIO.input(BUTTON_PIN_6) == GPIO.HIGH and DT.datetime.now() > c.getStartKick() + DT.timedelta(seconds=0.3): # KICK
+                
+            if (GPIO.input(BUTTON_PIN_7) == GPIO.HIGH if c.isFirst else GPIO.input(BUTTON_PIN_6) == GPIO.HIGH) and DT.datetime.now() > c.getStartKick() + DT.timedelta(seconds=0.3): # KICK
                 c.attacking = True
                 c.replace = "Kick"
                 c.setStartKick(DT.datetime.now())
 
-            if GPIO.input(BUTTON_PIN_13) == GPIO.HIGH if c.isFirst else GPIO.input(BUTTON_PIN) == GPIO.HIGH and not GPIO.input(BUTTON_PIN_10) == GPIO.HIGH: # JUMP
+            if (GPIO.input(BUTTON_PIN_13) == GPIO.HIGH if c.isFirst else GPIO.input(BUTTON_PIN) == GPIO.HIGH) and not GPIO.input(BUTTON_PIN_10) == GPIO.HIGH: # JUMP
                 c.jumping = True
 
         for player in players:

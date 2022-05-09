@@ -1,12 +1,13 @@
 import pygame
 import os
 from scripts.consts import WIDTH, HEIGHT
+import math
 
 IMG_DIR = 'static/img'
 MULTIPLIER = 2
 
 #* LOGO
-LOGO = pygame.transform.scale(pygame.image.load(os.path.join(IMG_DIR, 'Logo.png')), (222*1.5, 104*1.5))
+LOGO = pygame.transform.scale(pygame.image.load(os.path.join(IMG_DIR, 'Logo.png')), (math.floor(222*1.5), math.floor(104*1.5)))
 #* BACKGROUND STREET FIGHTER HD
 BGSF = pygame.transform.scale(pygame.image.load(os.path.join(IMG_DIR, 'bgsfhd.jpg')), (WIDTH, HEIGHT))
 
