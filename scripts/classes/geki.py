@@ -4,7 +4,7 @@ from scripts.consts import *
 from scripts.classes.player import Player
 import datetime as DT
 
-class Ken(Character):
+class Geki(Character):
     def __init__(self, defaultPosX, defaultPosY, standWidth, standHeight) -> None:
         self.hadoukens = []
         self.direction = Player.nbrOfPlayers == 1 # True if right directed, left otherwise
@@ -14,7 +14,7 @@ class Ken(Character):
         self.startPunch = DT.datetime.now() - DT.timedelta(seconds=0.5) # Cooldown for punch animation
         self.startKick = DT.datetime.now() - DT.timedelta(seconds=0.5) # Cooldown for kick animation
 
-        self.name = "Ken"
+        self.name = "Geki"
         super().__init__(defaultPosX, defaultPosY, standWidth, standHeight)
     
     def handleHadoukens(self, opponent):
@@ -24,9 +24,9 @@ class Ken(Character):
                 pygame.event.post(pygame.event.Event(opponent.hit))
                 self.hadoukens.remove(hadouken)
                 opponent.getHit(opponent, HADOUKEN_DAMAGE)
-            if hadouken.x > WIDTH or hadouken.x < 0 - HADOUKEN.get_width():
+            if hadouken.x > WIDTH or hadouken.x < 0 - SHURIKEN.get_width():
                 self.hadoukens.remove(hadouken)
-    
+
     def getStartHadouken(self):
         return self.startHadouken
     def getStartPunch(self):
@@ -42,16 +42,17 @@ class Ken(Character):
         self.startKick = newStartKick
 
     def getStandDrawing(self):
-        return KEN_STAND if self.direction else KEN_STAND_REVERSE
+        return GEKI_STAND if self.direction else GEKI_STAND_REVERSE
     def getStoopDrawing(self):
-        return KEN_STOOP if self.direction else KEN_STOOP_REVERSE
+        return GEKI_STOOP if self.direction else GEKI_STOOP_REVERSE
     def getJumpDrawing(self):
-        return KEN_JUMP if self.direction else KEN_JUMP_REVERSE
+        return GEKI_JUMP if self.direction else GEKI_JUMP_REVERSE
     def getStaticPunchDrawing(self):
-        return KEN_STATIC_PUNCH if self.direction else KEN_STATIC_PUNCH_REVERSE
+        return GEKI_STATIC_PUNCH if self.direction else GEKI_STATIC_PUNCH_REVERSE
     def getStaticKickDrawing(self):
-        return KEN_STATIC_KICK if self.direction else KEN_STATIC_KICK_REVERSE
+        return GEKI_STATIC_KICK if self.direction else GEKI_STATIC_KICK_REVERSE
     def getHdkPosDrawing(self):
-        return KEN_HADOUKEN if self.direction else KEN_HADOUKEN_REVERSE
+        return GEKI_HADOUKEN if self.direction else GEKI_HADOUKEN_REVERSE
     def getProjectileDrawing(self):
-        return HADOUKEN if self.direction else HADOUKEN_REVERSE
+        return SHURIKEN if self.direction else SHURIKEN_REVERSE
+    

@@ -8,6 +8,7 @@ from scripts.consts import *
 from scripts.classes.player import Player
 from scripts.classes.ryu import Ryu
 from scripts.classes.ken import Ken
+from scripts.classes.geki import Geki
 
 mixer.init()
 pygame.init()
@@ -37,16 +38,13 @@ def drawWindow(players):
         #* pygame.draw.rect(WIN, (255,0,0), player.character.surface, 2) # Draw character's hitbox
 
         for hadouken in player.character.hadoukens:
-            if player.character.direction: # RIGHT DIRECTION HADOUKEN
-                WIN.blit(HADOUKEN, (hadouken.x + 10, hadouken.y - 5))
-            else: # LEFT DIRECTION HADOUKEN
-                WIN.blit(REVERSE_HADOUKEN, (hadouken.x + 10, hadouken.y - 5))
+            WIN.blit(player.character.getProjectileDrawing(), (hadouken.x + 10, hadouken.y - 5))
 
     pygame.display.update()
 
 def main():
     players = [Player("Player 1")]
-    players[0].setCharacter(Ryu(150, 215, 46*2, 92*2)) # (posX, posY, width, height)
+    players[0].setCharacter(Geki(150, 215, 46*2, 92*2)) # (posX, posY, width, height)
 
     twoPlayers = True
     if twoPlayers :
@@ -68,7 +66,8 @@ def main():
                 for player in players:
                     c = player.character
                     if event.key == (pygame.K_LCTRL if c.isFirst else pygame.K_RSHIFT) and len(c.hadoukens) < MAX_HADOUKENS and not c.jumping:
-                        hadouken = pygame.Rect(c.surface.x + c.surface.width + 35 if c.direction else c.surface.x - 50, 245, 28*2, 26*2)
+                        hadouken = None
+                        hadouken = pygame.Rect(c.surface.x + c.surface.width + 35 if c.direction else c.surface.x - 50, 245 if player.character.name != "Geki" else 300, 28*2, 26*2)
                         c.hadoukens.append(hadouken)
                         c.setStartHadouken(DT.datetime.now())
                         hadoukenSound = mixer.Sound('static/sound/hadouken.wav')

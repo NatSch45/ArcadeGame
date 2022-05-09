@@ -24,7 +24,7 @@ class Ryu(Character):
                 pygame.event.post(pygame.event.Event(opponent.hit))
                 self.hadoukens.remove(hadouken)
                 opponent.getHit(opponent, HADOUKEN_DAMAGE)
-            if hadouken.x > WIDTH or hadouken.x < 0 - 66:
+            if hadouken.x > WIDTH or hadouken.x < 0 - HADOUKEN.get_width():
                 self.hadoukens.remove(hadouken)
 
     def getStartHadouken(self):
@@ -53,4 +53,6 @@ class Ryu(Character):
         return RYU_STATIC_KICK if self.direction else RYU_STATIC_KICK_REVERSE
     def getHdkPosDrawing(self):
         return RYU_HADOUKEN if self.direction else RYU_HADOUKEN_REVERSE
+    def getProjectileDrawing(self):
+        return HADOUKEN if self.direction else HADOUKEN_REVERSE
     
