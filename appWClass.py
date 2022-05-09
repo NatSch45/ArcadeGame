@@ -9,6 +9,7 @@ from scripts.classes.player import Player
 from scripts.classes.ryu import Ryu
 from scripts.classes.ken import Ken
 from scripts.classes.geki import Geki
+from scripts.classes.eagle import Eagle
 
 mixer.init()
 pygame.init()
@@ -50,7 +51,7 @@ def main():
     twoPlayers = True
     if twoPlayers :
         players.append(Player("Player 2"))
-        players[1].setCharacter(Ken(650, 215, 47*2, 92*2)) # (posX, posY, width, height)
+        players[1].setCharacter(Eagle(650, 215, 47*2, 92*2)) # (posX, posY, width, height)
 
     clock = pygame.time.Clock()
     run = True

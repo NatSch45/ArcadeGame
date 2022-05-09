@@ -61,8 +61,30 @@ GEKI_STATIC_PUNCH_REVERSE = pygame.transform.scale(pygame.image.load(os.path.joi
 GEKI_STATIC_KICK_REVERSE = pygame.transform.scale(pygame.image.load(os.path.join(IMG_DIR, 'geki/ReverseGekiStaticKick.png')), (96*MULTIPLIER, 92*MULTIPLIER))
 GEKI_HADOUKEN_REVERSE = pygame.transform.scale(pygame.image.load(os.path.join(IMG_DIR, 'geki/ReverseGekiShourikenPos.png')), (56*MULTIPLIER, 64*MULTIPLIER))
 
-#* PROJECTILE SURFACES
+#* EAGLE CHARACTER SURFACES
+EAGLE_NAME = pygame.transform.scale(pygame.image.load(os.path.join(IMG_DIR, 'eagle/EagleName.png')), (70*MULTIPLIER, 14*MULTIPLIER))
+# RIGHT DIRECTED (default)
+EAGLE_STAND = pygame.transform.scale(pygame.image.load(os.path.join(IMG_DIR, 'eagle/EagleStand.png')), (48*MULTIPLIER, 93*MULTIPLIER))
+EAGLE_JUMP = pygame.transform.scale(pygame.image.load(os.path.join(IMG_DIR, 'eagle/EagleJump.png')), (50*MULTIPLIER, 72*MULTIPLIER))
+EAGLE_STOOP = pygame.transform.scale(pygame.image.load(os.path.join(IMG_DIR, 'eagle/EagleStoop.png')), (47*MULTIPLIER, 77*MULTIPLIER))
+EAGLE_STATIC_PUNCH = pygame.transform.scale(pygame.image.load(os.path.join(IMG_DIR, 'eagle/EagleStaticPunch.png')), (104*MULTIPLIER, 89*MULTIPLIER))
+EAGLE_STATIC_KICK = pygame.transform.scale(pygame.image.load(os.path.join(IMG_DIR, 'eagle/EagleStaticKick.png')), (101*MULTIPLIER, 81*MULTIPLIER))
+EAGLE_HADOUKEN = pygame.transform.scale(pygame.image.load(os.path.join(IMG_DIR, 'eagle/EagleThrowTruncheon.png')), (111*MULTIPLIER, 94*MULTIPLIER))
+# LEFT DIRECTED (reverse)
+EAGLE_STAND_REVERSE = pygame.transform.scale(pygame.image.load(os.path.join(IMG_DIR, 'eagle/ReverseEagleStand.png')), (48*MULTIPLIER, 93*MULTIPLIER))
+EAGLE_JUMP_REVERSE = pygame.transform.scale(pygame.image.load(os.path.join(IMG_DIR, 'eagle/ReverseEagleJump.png')), (50*MULTIPLIER, 72*MULTIPLIER))
+EAGLE_STOOP_REVERSE = pygame.transform.scale(pygame.image.load(os.path.join(IMG_DIR, 'eagle/ReverseEagleStoop.png')), (47*MULTIPLIER, 77*MULTIPLIER))
+EAGLE_STATIC_PUNCH_REVERSE = pygame.transform.scale(pygame.image.load(os.path.join(IMG_DIR, 'eagle/ReverseEagleStaticPunch.png')), (104*MULTIPLIER, 89*MULTIPLIER))
+EAGLE_STATIC_KICK_REVERSE = pygame.transform.scale(pygame.image.load(os.path.join(IMG_DIR, 'eagle/ReverseEagleStaticKick.png')), (101*MULTIPLIER, 81*MULTIPLIER))
+EAGLE_HADOUKEN_REVERSE = pygame.transform.scale(pygame.image.load(os.path.join(IMG_DIR, 'eagle/ReverseEagleThrowTruncheon.png')), (111*MULTIPLIER, 94*MULTIPLIER))
+
+#* PROJECTILES SURFACES
+# HADOUKEN
 HADOUKEN = pygame.transform.scale(pygame.image.load(os.path.join(IMG_DIR, 'Hadouken.png')), (28*MULTIPLIER, 26*MULTIPLIER))
 HADOUKEN_REVERSE = pygame.transform.scale(pygame.image.load(os.path.join(IMG_DIR, 'ReverseHadouken.png')), (28*MULTIPLIER, 26*MULTIPLIER))
+# SHURIKEN
 SHURIKEN = pygame.transform.scale(pygame.image.load(os.path.join(IMG_DIR, 'Shuriken.png')), (8*MULTIPLIER, 8*MULTIPLIER))
 SHURIKEN_REVERSE = pygame.transform.scale(pygame.image.load(os.path.join(IMG_DIR, 'ReverseShuriken.png')), (8*MULTIPLIER, 8*MULTIPLIER))
+# TRUNCHEON
+TRUNCHEON = pygame.transform.scale(pygame.image.load(os.path.join(IMG_DIR, 'Truncheon.png')), (29*MULTIPLIER, 4*MULTIPLIER))
+TRUNCHEON_REVERSE = pygame.transform.scale(pygame.image.load(os.path.join(IMG_DIR, 'ReverseTruncheon.png')), (29*MULTIPLIER, 4*MULTIPLIER))
