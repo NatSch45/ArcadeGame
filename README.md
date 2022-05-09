@@ -1,5 +1,12 @@
 # ARCADE GAME
 
+## Used tools
+
+![Trello](./static/Badges/trello-kanban-management.svg)
+![GitHub](./static/Badges/github-dev-tool.svg)
+![Krita](./static/Badges/krita-image-editing-tool.svg)
+![Imager](./static/Badges/imager-auto-imager-for-raspberry.svg)
+
 ## Controls (keyboard)
 
 ### Player 1
