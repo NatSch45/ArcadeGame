@@ -15,7 +15,7 @@ class Geki(Character):
         self.startKick = DT.datetime.now() - DT.timedelta(seconds=0.5) # Cooldown for kick animation
 
         self.name = "Geki"
-        super().__init__(defaultPosX, defaultPosY, standWidth, standHeight)
+        super(Geki, self).__init__(defaultPosX, defaultPosY, standWidth, standHeight)
     
     def handleHadoukens(self, opponent):
         for hadouken in self.hadoukens:
@@ -23,7 +23,8 @@ class Geki(Character):
             if opponent.surface.colliderect(hadouken):
                 pygame.event.post(pygame.event.Event(opponent.hit))
                 self.hadoukens.remove(hadouken)
-                opponent.getHit(opponent, HADOUKEN_DAMAGE)
+                damage = (self.maxHp - self.hp) / 50
+                opponent.getHit(opponent, HADOUKEN_DAMAGE * (0.2 if damage <= 0.2 else (1.5 if damage >= 1.5 else damage))) #? The less health points the character has, the harder he shoots, but always in the interval [0.2, 1.5]
             if hadouken.x > WIDTH or hadouken.x < 0 - SHURIKEN.get_width():
                 self.hadoukens.remove(hadouken)
 
