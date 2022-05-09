@@ -32,6 +32,7 @@ FONT_PLAYER = pygame.font.Font(os.path.join('static/font', 'ARCADE_N.TTF'), 20)
 FONT_CHARACTER = pygame.font.Font(os.path.join('static/font', 'ARCADE_N.TTF'), 20)
 FONT_GAME_OVER = pygame.font.Font(os.path.join('static/font', 'ARCADE_N.TTF'), 80)
 FONT_WINNER = pygame.font.Font(os.path.join('static/font', 'ARCADE_N.TTF'), 40)
+FONT_BUTTONS = pygame.font.Font(os.path.join('static/font', 'ARCADE_N.TTF'), 50)
 
 #* COLORS
 RED = (255, 0, 0)

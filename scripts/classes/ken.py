@@ -15,7 +15,7 @@ class Ken(Character):
         self.startKick = DT.datetime.now() - DT.timedelta(seconds=0.5) # Cooldown for kick animation
 
         self.name = "Ken"
-        super().__init__(defaultPosX, defaultPosY, standWidth, standHeight)
+        super(Ken, self).__init__(defaultPosX, defaultPosY, standWidth, standHeight)
     
     def handleHadoukens(self, opponent):
         for hadouken in self.hadoukens:
@@ -23,8 +23,9 @@ class Ken(Character):
             if opponent.surface.colliderect(hadouken):
                 pygame.event.post(pygame.event.Event(opponent.hit))
                 self.hadoukens.remove(hadouken)
-                opponent.getHit(opponent, HADOUKEN_DAMAGE)
-            if hadouken.x > WIDTH or hadouken.x < 0 - 66:
+                damage = (self.maxHp - self.hp) / 50
+                opponent.getHit(opponent, HADOUKEN_DAMAGE * (0.2 if damage <= 0.2 else (1.5 if damage >= 1.5 else damage))) #? The less health points the character has, the harder he shoots, but always in the interval [0.2, 1.5]
+            if hadouken.x > WIDTH or hadouken.x < 0 - HADOUKEN.get_width():
                 self.hadoukens.remove(hadouken)
     
     def getStartHadouken(self):
@@ -53,3 +54,7 @@ class Ken(Character):
         return KEN_STATIC_KICK if self.direction else KEN_STATIC_KICK_REVERSE
     def getHdkPosDrawing(self):
         return KEN_HADOUKEN if self.direction else KEN_HADOUKEN_REVERSE
+    def getProjectileDrawing(self):
+        return HADOUKEN if self.direction else HADOUKEN_REVERSE
+    def getNameDrawing(self):
+        return KEN_NAME
