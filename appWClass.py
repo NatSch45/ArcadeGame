@@ -1,7 +1,6 @@
 import pygame
 from pygame import mixer
 import datetime as DT
-import os
 
 from scripts.surfaces import *
 from scripts.consts import *
