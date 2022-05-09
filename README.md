@@ -27,7 +27,7 @@ Run the command **py .\appWClasses.py** (Windows) or **py ./appWClasses.py** (Li
 - **UP ARROW** : select up character for second player
 - **DOWN ARROW** : select down character for second player
 - **RETURN** or **ESCAPE** : validate character for both players
-- - **ESCAPE** : quit
+- **ESCAPE** : quit
 
 ### Player 1
 
